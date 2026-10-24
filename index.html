@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Unblemished AI</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --input-bg: #f4f4f4;
+      --border: #e5e5e5;
+      --accent: #10a37f;
+      --blue-btn: #0d6efd;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ========== HOME SCREEN ========== */
+    #home-screen {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 40%);
+    }
+
+    .status-bar {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 12px;
+    }
+
+    .menu-btn, .new-chat-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .logo-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 20px;
+      gap: 16px;
+    }
+
+    .app-logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .app-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #111;
+    }
+
+    .app-tagline {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: -8px;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 0 28px 24px;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: transparent;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: left;
+    }
+
+    .action-btn:hover, .action-btn:active {
+      background: #f0f0f0;
+    }
+
+    .action-btn svg {
+      width: 22px;
+      height: 22px;
+      opacity: 0.7;
+    }
+
+    .input-area {
+      padding: 12px 16px 28px;
+      background: #fff;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: #f4f4f4;
+      border-radius: 28px;
+      padding: 8px 10px 8px 16px;
+      gap: 8px;
+      box-shadow: var(--shadow);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      outline: none;
+      color: #333;
+      padding: 8px 0;
+    }
+
+    .input-wrapper input::placeholder {
+      color: #999;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #666;
+      font-size: 20px;
+    }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #0d6efd;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .send-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* ========== CHAT SCREEN ========== */
+    #chat-screen {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      background: #fff;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .chat-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .chat-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 15.5px;
+      line-height: 1.45;
+      word-wrap: break-word;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: #0d6efd;
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .message.ai {
+      align-self: flex-start;
+      background: #f0f0f0;
+      color: #1a1a1a;
+      border-bottom-left-radius: 6px;
+    }
+
+    .message.ai .typing {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .message.ai .typing span {
+      width: 7px;
+      height: 7px;
+      background: #888;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .message.ai .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .message.ai .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    .message img.uploaded {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 6px;
+    }
+
+    .chat-input-area {
+      padding: 10px 12px 20px;
+      background: #fff;
+      border-top: 1px solid #eee;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      align-items: flex-end;
+      background: #f4f4f4;
+      border-radius: 24px;
+      padding: 8px 8px 8px 14px;
+      gap: 6px;
+    }
+
+    .chat-input-wrapper textarea {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      outline: none;
+      resize: none;
+      max-height: 120px;
+      padding: 8px 0;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    /* ========== IMAGE PREVIEW ========== */
+    .preview-bar {
+      display: none;
+      padding: 8px 12px;
+      background: #f8f8f8;
+      border-top: 1px solid #eee;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preview-bar img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .preview-bar .remove-img {
+      background: #ff3b30;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* ========== SIDE MENU ========== */
+    #side-menu {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: #111;
+      color: #fff;
+      z-index: 100;
+      transition: left 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+
+    #side-menu.open {
+      left: 0;
+    }
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 99;
+      display: none;
+    }
+
+    .menu-overlay.show {
+      display: block;
+    }
+
+    .menu-header {
+      padding: 16px 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #333;
+    }
+
+    .menu-header img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+    }
+
+    .menu-header h3 {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .menu-item {
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      font-size: 15px;
+      color: #ddd;
+      transition: background 0.2s;
+    }
+
+    .menu-item:hover {
+      background: #222;
+    }
+
+    .menu-item svg {
+      width: 20px;
+      height: 20px;
+      opacity: 0.8;
+    }
+
+    /* ========== UTILS ========== */
+    .hidden { display: none !important; }
+
+    /* Dark mode support (optional toggle later) */
+    @media (prefers-color-scheme: dark) {
+      /* keep light for now to match ChatGPT home */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDE MENU -->
+  <div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+  <div id="side-menu">
+    <div class="menu-header">
+      <img src="logo.png" alt="Logo" />
+      <div>
+        <h3>Unblemished AI</h3>
+        <div style="font-size:12px;color:#888;">v1.0</div>
+      </div>
+    </div>
+    <div class="menu-item" onclick="newChat(); closeMenu();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      New Chat
+    </div>
+    <div class="menu-item" onclick="alert('History feature — aap baad mein add kar sakte ho'); closeMenu();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      History
+    </div>
+    <div class="menu-item" onclick="alert('Settings — modify kar sakte ho'); closeMenu();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </div>
+    <div style="flex:1"></div>
+    <div class="menu-item" style="color:#aaa;font-size:13px;">
+      Made for you • Fully modifiable
+    </div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen">
+    <div class="top-bar">
+      <button class="menu-btn" onclick="openMenu()">☰</button>
+      <button class="new-chat-btn" onclick="newChat()" title="New chat">↻</button>
+    </div>
+
+    <div class="logo-area">
+      <img src="logo.png" alt="Unblemished AI" class="app-logo" />
+      <div class="app-name">Unblemished AI</div>
+      <div class="app-tagline">Your personal AI assistant</div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="action-btn" onclick="startWithPrompt('Create an image of ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        Create an image
+      </button>
+      <button class="action-btn" onclick="startWithPrompt('Help me write or edit: ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Write or edit
+      </button>
+      <button class="action-btn" onclick="startWithPrompt('Search the web for: ')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Search the web
+      </button>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrapper">
+        <button class="icon-btn" onclick="document.getElementById('file-input').click()" title="Attach photo">+</button>
+        <input type="text" id="home-input" placeholder="Ask Unblemished AI" autocomplete="off" />
+        <button class="icon-btn" id="home-mic" title="Bolkar likho" onclick="startVoice('home-input', this)">🎤</button>
+        <button class="send-btn" id="home-send" onclick="sendFromHome()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div id="chat-screen">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <button class="back-btn" onclick="goHome()">←</button>
+        <img src="logo.png" class="chat-logo" alt="" />
+        <div class="chat-title">Unblemished AI</div>
+      </div>
+      <button class="new-chat-btn" style="width:36px;height:36px;font-size:16px;" onclick="newChat()">↻</button>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="preview-bar" id="preview-bar">
+      <img id="preview-img" src="" alt="preview" />
+      <button class="remove-img" onclick="removeImage()">×</button>
+      <span style="font-size:13px;color:#666;">Photo attached</span>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-wrapper">
+        <button class="icon-btn" onclick="document.getElementById('file-input').click()">+</button>
+        <textarea id="chat-input" rows="1" placeholder="Message Unblemished AI..." oninput="autoGrow(this)"></textarea>
+        <button class="icon-btn" id="chat-mic" title="Bolkar likho" onclick="startVoice('chat-input', this)">🎤</button>
+        <button class="send-btn" id="chat-send" onclick="sendMessage()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleImage(this)" />
+
+  <script>
+    // ========== STATE ==========
+    let attachedImage = null; // base64 or null
+    let isTyping = false;
+
+    // ========== UI HELPERS ==========
+    function openMenu() {
+      document.getElementById('side-menu').classList.add('open');
+      document.getElementById('menu-overlay').classList.add('show');
+    }
+    function closeMenu() {
+      document.getElementById('side-menu').classList.remove('open');
+      document.getElementById('menu-overlay').classList.remove('show');
+    }
+
+    function showChat() {
+      document.getElementById('home-screen').style.display = 'none';
+      document.getElementById('chat-screen').style.display = 'flex';
+    }
+    function goHome() {
+      document.getElementById('chat-screen').style.display = 'none';
+      document.getElementById('home-screen').style.display = 'flex';
+    }
+
+    function newChat() {
+      document.getElementById('messages').innerHTML = '';
+      chatHistory = [];
+      attachedImage = null;
+      document.getElementById('preview-bar').style.display = 'none';
+      document.getElementById('chat-input').value = '';
+      goHome();
+    }
+
+    function startWithPrompt(text) {
+      showChat();
+      const input = document.getElementById('chat-input');
+      input.value = text;
+      input.focus();
+      autoGrow(input);
+    }
+
+    function autoGrow(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+    }
+
+    // ========== IMAGE HANDLING ==========
+    function handleImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        attachedImage = e.target.result;
+        document.getElementById('preview-img').src = attachedImage;
+        document.getElementById('preview-bar').style.display = 'flex';
+        // If still on home, move to chat
+        if (document.getElementById('home-screen').style.display !== 'none') {
+          showChat();
+        }
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    }
+
+    function removeImage() {
+      attachedImage = null;
+      document.getElementById('preview-bar').style.display = 'none';
+    }
+
+    // ========== SEND LOGIC ==========
+    document.getElementById('home-input').addEventListener('input', function() {
+      document.getElementById('home-send').disabled = !this.value.trim();
+    });
+    document.getElementById('home-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.trim()) sendFromHome();
+    });
+
+    function sendFromHome() {
+      const text = document.getElementById('home-input').value.trim();
+      if (!text) return;
+      document.getElementById('home-input').value = '';
+      document.getElementById('home-send').disabled = true;
+      showChat();
+      addUserMessage(text);
+      respondTo(text);
+    }
+
+    document.getElementById('chat-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text && !attachedImage) return;
+      if (isTyping) return;
+
+      addUserMessage(text, attachedImage);
+      input.value = '';
+      autoGrow(input);
+      const imgCopy = attachedImage;
+      removeImage();
+      respondTo(text, imgCopy);
+    }
+
+    function addUserMessage(text, imageData) {
+      const container = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message user';
+      if (text) div.textContent = text;
+      if (imageData) {
+        const img = document.createElement('img');
+        img.src = imageData;
+        img.className = 'uploaded';
+        div.appendChild(img);
+      }
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function addAIMessage(html) {
+      const container = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'message ai';
+      div.innerHTML = html;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      isTyping = true;
+      return addAIMessage('<div class="typing"><span></span><span></span><span></span></div>');
+    }
+
+    // ========== SIMPLE AI RESPONSES (you can replace with real API later) ==========
+
+    function toast(msg) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;background:#222;color:#fff;padding:12px 14px;border-radius:12px;font-size:14px;z-index:99;text-align:center;';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(t._h);
+      t._h = setTimeout(() => { t.style.display = 'none'; }, 4500);
+    }
+
+    let recog = null;
+    function startVoice(targetId, btn) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { toast('Is browser me mic support nahi hai. Keyboard ke mic se bolkar likho.'); return; }
+      if (recog) { try { recog.stop(); } catch (e) {} recog = null; btn.style.background = ''; return; }
+      const target = document.getElementById(targetId);
+      const base = target.value ? target.value + ' ' : '';
+      recog = new SR();
+      recog.lang = 'hi-IN';
+      recog.interimResults = true;
+      recog.continuous = false;
+      btn.style.background = '#ffd6d6';
+      recog.onresult = (e) => {
+        let s = '';
+        for (let i = 0; i < e.results.length; i++) s += e.results[i][0].transcript;
+        target.value = base + s;
+        target.dispatchEvent(new Event('input'));
+      };
+      recog.onerror = (e) => {
+        const denied = e.error === 'not-allowed' || e.error === 'service-not-allowed';
+        toast(denied ? 'Mic permission nahi mili. Keyboard ke mic se bolkar likho.' : 'Awaaz sunai nahi di. Dobara try karo.');
+      };
+      recog.onend = () => { recog = null; btn.style.background = ''; };
+      try { recog.start(); } catch (e) { recog = null; btn.style.background = ''; toast('Mic shuru nahi ho paya.'); }
+    }
+
+    const IMG_RE = /(create an image|generate (an )?image|image of|image bana|photo bana|tasveer|tasvir|picture bana|draw|sketch|logo bana|chitra|फोटो बना|तस्वीर|चित्र)/i;
+
+    async function drawImage(text, typingEl, sample) {
+      const prompt = 'Neeche di gayi request ke liye ek sundar, simple, rangeen flat illustration SVG banao.\nRequest: ' + text +
+        '\nRules: sirf SVG code do (<svg ...> se </svg> tak), viewBox="0 0 512 512", koi script nahi, koi bahar ki image nahi, koi explanation nahi, koi markdown fence nahi.';
+      try {
+        const res = await sample(prompt, { cache: false });
+        const m = res.text.match(/<svg[\s\S]*<\/svg>/i);
+        if (!m) throw new Error('no svg');
+        let svg = m[0].replace(/<script[\s\S]*?<\/script>/gi, '').replace(/\son\w+\s*=\s*("[^"]*"|'[^']*')/gi, '');
+        if (!/xmlns=/.test(svg)) svg = svg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+        typingEl.remove();
+        const uri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        addAIMessage('Ye lo aapki drawing:<br><img src="' + uri + '" style="width:100%;max-width:320px;border-radius:12px;margin-top:8px;background:#fff;" alt="drawing"><br><span style="font-size:12px;color:#888;">Ye AI se bani drawing (illustration) hai, asli photo nahi.</span>');
+      } catch (e) {
+        if (typingEl.parentNode) typingEl.remove();
+        addAIMessage('Drawing nahi ban payi. Dobara try karo ya thoda alag likho.');
+      }
+      isTyping = false;
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); });
+    }
+    let chatHistory = [];
+    let samplePromise = null;
+    const SYS = 'Tum Unblemished AI ho, ek dost jaisa personal AI assistant. User jis language me likhe (Hindi, Hinglish ya English) usi me jawab do. Jawab saaf, chhota aur madadgaar rakho.';
+
+    function getSample() {
+      if (!samplePromise) {
+        samplePromise = (window.claude && window.claude.use ? window.claude.use('sample') : Promise.resolve(null)).catch(() => null);
+      }
+      return samplePromise;
+    }
+
+    function fmt(t) {
+      return escapeHtml(t).replace(/\n/g, '<br>');
+    }
+
+    async function respondTo(text, imageData) {
+      const typingEl = showTyping();
+      const sample = imageData ? null : await getSample();
+
+      if (!sample) {
+        setTimeout(() => {
+          typingEl.remove();
+          isTyping = false;
+          addAIMessage(generateReply(text, !!imageData));
+        }, 600);
+        return;
+      }
+
+      if (IMG_RE.test(text || '')) { await drawImage(text, typingEl, sample); return; }
+      chatHistory.push({ role: 'user', content: text });
+      const msgs = chatHistory.map((m, i) => i === 0 ? { role: m.role, content: SYS + '\n\n' + m.content } : m);
+      let bubble = null;
+      try {
+        const res = await sample(msgs, {
+          cache: false,
+          onText: ({ text: t }) => {
+            if (!bubble) { typingEl.remove(); bubble = addAIMessage(''); }
+            bubble.innerHTML = fmt(t);
+            const c = document.getElementById('messages');
+            c.scrollTop = c.scrollHeight;
+          }
+        });
+        if (!bubble) { typingEl.remove(); bubble = addAIMessage(''); }
+        bubble.innerHTML = fmt(res.text);
+        chatHistory.push({ role: 'assistant', content: res.text });
+      } catch (e) {
+        chatHistory.pop();
+        if (typingEl.parentNode) typingEl.remove();
+        const msg = e && e.code === 'not_granted'
+          ? 'Permission nahi mili. Dobara bhejo aur "Allow" dabao.'
+          : e && e.code === 'rate_limited'
+          ? 'Abhi bahut zyada requests ho gayi. Thodi der baad try karo.'
+          : 'Jawab nahi aa paya. Dobara try karo.';
+        addAIMessage(msg);
+      }
+      isTyping = false;
+    }
+
+    function generateReply(text, hasImage) {
+      const lower = (text || '').toLowerCase();
+
+      if (hasImage) {
+        return `Maine aapki photo dekh li hai 📷<br><br>Aap is photo ke baare mein kya jaanna chahte ho? Main isko describe kar sakta hoon, edit suggestions de sakta hoon, ya isse related kuch bhi help kar sakta hoon.`;
+      }
+
+      if (lower.includes('create an image') || lower.includes('generate image') || lower.includes('image of')) {
+        return `🎨 <b>Image Generation</b><br><br>Abhi yeh demo version hai. Real image generation ke liye aap OpenAI DALL·E, Flux, ya Stable Diffusion API key add kar sakte ho.<br><br>Code mein <code>generateImage()</code> function ready hai — bas API key daalna hai.`;
+      }
+
+      if (lower.includes('hello') || lower.includes('hi') || lower.includes('namaste') || lower.includes('hey')) {
+        return `Namaste! 👋 Main <b>Unblemished AI</b> hoon — aapka personal assistant.<br><br>Aap mujhse kuch bhi pooch sakte ho, photo bhej sakte ho, ya image generate karne ko keh sakte ho.`;
+      }
+
+      if (lower.includes('who are you') || lower.includes('tum kaun')) {
+        return `Main <b>Unblemished AI</b> hoon — aapke liye specially banaya gaya AI assistant.<br><br>Mera logo snake + star design hai, aur main ChatGPT jaisi feel deta hoon. Aap is code ko freely modify kar sakte ho.`;
+      }
+
+      if (lower.includes('write') || lower.includes('edit') || lower.includes('likh')) {
+        return `Likhne / edit karne mein madad ke liye ready hoon!<br><br>Aap mujhe topic, tone (formal / casual), length batao — main content bana dunga.`;
+      }
+
+      if (lower.includes('search') || lower.includes('web')) {
+        return `Web search feature abhi demo mode mein hai.<br><br>Real search ke liye aap Google Custom Search / SerpAPI / Brave Search API add kar sakte ho. Main aapko code structure de sakta hoon.`;
+      }
+
+      // Default intelligent-looking reply
+      return `Samajh gaya: "<i>${escapeHtml(text)}</i>"<br><br>Yeh demo response hai. Real AI power ke liye aap OpenAI, Grok, Claude, ya koi bhi LLM API is project mein easily integrate kar sakte ho.<br><br>Code clean aur modifiable hai — <code>generateReply()</code> function replace karke real API call laga do.`;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ========== OPTIONAL: Real API placeholder ==========
+    /*
+    async function callRealAI(prompt, imageBase64) {
+      // Example with OpenAI-compatible API
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_API_KEY'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      return data.choices[0].message.content;
+    }
+    */
+
+    </script>
+</body>
+</html>
